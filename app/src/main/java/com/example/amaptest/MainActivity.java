@@ -4,7 +4,7 @@ package com.example.amaptest;
 import android.Manifest;
 
 
-
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -25,6 +25,7 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     //设置蓝点格式和界面标尺等
     private UiSettings mUiSetting;
 
+    private PoiSearch.Query query;
+//keyWord表示搜索字符串，
+//第二个参数表示POI搜索类型，二者选填其一，选用POI搜索类型时建议填写类型代码，码表可以参考下方（而非文字）
+//cityCode表示POI搜索区域，可以是城市编码也可以是城市名称，也可以传空字符串，空字符串代表全国在全国范围内进行搜索
 
 
     @Override
@@ -63,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         AMapLocationClient.updatePrivacyShow(this, true, true);
         AMapLocationClient.updatePrivacyAgree(this, true);
         tvContext = findViewById(R.id.position_text_view);
-
 
         initLocation(); //初始化定位
 
@@ -97,14 +101,25 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
 
         mUiSetting = aMap.getUiSettings();//实例化控件交互
 
+        mUiSetting.setZoomControlsEnabled(false); //隐藏缩放按钮
         mUiSetting.setScaleControlsEnabled(true);// 可触发定位并显示当前位置
 
         mUiSetting.setMyLocationButtonEnabled(true); //显示默认的定位按钮(当前位置的按钮)
 
         aMap.setMyLocationEnabled(true);// 可触发定位并显示当前位置
 
-        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
+        myLocationStyle = new MyLocationStyle();
+        // 自定义定位蓝点图标
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+        // 自定义精度范围的圆形边框颜色  都为0则透明
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));
+        // 自定义精度范围的圆形边框宽度  0 无宽度
+        myLocationStyle.strokeWidth(0);
+        // 设置圆形的填充颜色  都为0则透明
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));
 
+        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
+//        setPointToCenter(int x, int y);//x、y均为屏幕坐标，屏幕左上角为坐标原点，即(0,0)点。
 
 
     }
@@ -122,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
@@ -144,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
         // 在定位结束后，在合适的生命周期调用onDestroy()方法
         // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+
 
        mLocationClient.startLocation();//启动定位
 
