@@ -4,19 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/position_text_view"
-    android:textColor="@color/black"
-    android:textSize="10dp"/>
+    <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/position_text_view"
+        android:textColor="@color/black"
+        android:textSize="10dp"/>-->
     <com.amap.api.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.amap.api.maps.MapView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/Float_search"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        >
-    </com.amap.api.maps.MapView>
+        app:pressedTranslationZ="18dp"
+    />
+<!--    app:pressedTranslationZ="18dp"//点击按钮时，按钮边缘阴影的宽度-->
 </LinearLayout>

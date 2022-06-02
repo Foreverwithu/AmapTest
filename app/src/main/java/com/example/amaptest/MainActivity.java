@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         setContentView(R.layout.activity_main);
         AMapLocationClient.updatePrivacyShow(this, true, true);
         AMapLocationClient.updatePrivacyAgree(this, true);
-        tvContext = findViewById(R.id.position_text_view);
+//        tvContext = findViewById(R.id.position_text_view);
 
         initLocation(); //初始化定位
 
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));
 
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
+
 //        setPointToCenter(int x, int y);//x、y均为屏幕坐标，屏幕左上角为坐标原点，即(0,0)点。
 
 
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
                 Log.e("城市: ", String.valueOf(aMapLocation.getCity()));
                 Log.e("区域: ", String.valueOf(aMapLocation.getDistrict()));
                 Log.e("街道: ", String.valueOf(aMapLocation.getStreet()));
-                tvContext.setText(stringBuffer.toString());
+//                tvContext.setText(stringBuffer.toString());
                 //显示比例尺控件
 
                 //显示系统蓝点
