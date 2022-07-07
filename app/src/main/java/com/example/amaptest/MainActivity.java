@@ -30,6 +30,10 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.amap.api.services.weather.LocalWeatherLive;
+import com.amap.api.services.weather.LocalWeatherLiveResult;
+import com.amap.api.services.weather.WeatherSearch;
+import com.amap.api.services.weather.WeatherSearchQuery;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -54,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     //设置蓝点格式和界面标尺等
     private UiSettings mUiSetting;
 
-    private PoiSearch.Query query;
+    private WeatherSearchQuery mquery;
+    private WeatherSearch mweathersearch;
 //keyWord表示搜索字符串，
 //第二个参数表示POI搜索类型，二者选填其一，选用POI搜索类型时建议填写类型代码，码表可以参考下方（而非文字）
 //cityCode表示POI搜索区域，可以是城市编码也可以是城市名称，也可以传空字符串，空字符串代表全国在全国范围内进行搜索
@@ -63,16 +68,16 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"The activity state---->onCreate");
+        Log.d(TAG, "The activity state---->onCreate");
         setContentView(R.layout.activity_main);
         AMapLocationClient.updatePrivacyShow(this, true, true);
         AMapLocationClient.updatePrivacyAgree(this, true);
 //        tvContext = findViewById(R.id.position_text_view);
 
+
         initLocation(); //初始化定位
 
         initMap(savedInstanceState);//初始化地图
-
         checkingAndroidVersion();//查看Android版本
 
 
@@ -90,10 +95,10 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
 
         aMap = mMapView.getMap(); //初始化地图控制器对象
 
-        aMap.setMinZoomLevel(12); //设置最小缩放等级为16，缩放级别为【3.20】
+        aMap.setMinZoomLevel(17); //地图缩放级别为【3.20】
 
 
-        aMap.setLocationSource( this); // 设置定位监听
+        aMap.setLocationSource(this); // 设置定位监听
 
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
 
@@ -106,17 +111,15 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
 
         mUiSetting.setMyLocationButtonEnabled(true); //显示默认的定位按钮(当前位置的按钮)
 
-        aMap.setMyLocationEnabled(true);// 可触发定位并显示当前位置
-
         myLocationStyle = new MyLocationStyle();
         // 自定义定位蓝点图标
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
         // 自定义精度范围的圆形边框颜色  都为0则透明
         myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));
         // 自定义精度范围的圆形边框宽度  0 无宽度
-        myLocationStyle.strokeWidth(0);
+        myLocationStyle.strokeWidth(10);
         // 设置圆形的填充颜色  都为0则透明
-        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));
+        myLocationStyle.radiusFillColor(Color.argb(50, 0, 100, 100));
 
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
 
@@ -148,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //获取最近3s内精度最高的一次定位结果：
         //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
-        mLocationOption.setOnceLocationLatest(true);
+        mLocationOption.setOnceLocation(true);
         //设置是否返回地址信息（默认返回地址信息）
         mLocationOption.setNeedAddress(true);
         //设置定位请求超时时间，单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
@@ -163,10 +166,34 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
 
 
-       mLocationClient.startLocation();//启动定位
+        mLocationClient.startLocation();//启动定位
 
     }
 
+/*
+    */
+/**
+     * 实时天气查询回调
+     *//*
+
+    @Override
+    public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult, int rCode) {
+        if (rCode == 1000) {
+            if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
+                LocalWeatherLive weatherlive = weatherLiveResult.getLiveResult();
+                reporttime1.setText(weatherlive.getReportTime() + "发布");
+                weather.setText(weatherlive.getWeather());
+                Temperature.setText(weatherlive.getTemperature() + "°");
+                wind.setText(weatherlive.getWindDirection() + "风     " + weatherlive.getWindPower() + "级");
+                humidity.setText("湿度         " + weatherlive.getHumidity() + "%");
+            } else {
+                ToastUtil.show(WeatherSearchActivity.this, R.string.no_result);
+            }
+        } else {
+            ToastUtil.showerror(WeatherSearchActivity.this, rCode);
+        }
+    }
+*/
 
     /**
      * 地图生存周期管理
@@ -192,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
         mMapView.onPause();
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -203,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         super.onDestroy();
         Log.d(TAG, "The activity state---->onDestroy");
         mMapView.onDestroy();
-        if(null != mLocationClient){
+        if (null != mLocationClient) {
             mLocationClient.onDestroy();
         }
     }
@@ -239,8 +267,6 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     }
 
 
-
-
     /**
      * 检查Android版本
      */
@@ -258,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
      * 动态请求权限
      */
     private void requestPermission() {
-            //所需要的权限  网络定位 GPS定位  获取手机状态权限  写入缓存到sd卡
+        //所需要的权限  网络定位 GPS定位  获取手机状态权限  写入缓存到sd卡
         String[] permission = {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -268,10 +294,10 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         if (EasyPermissions.hasPermissions(this, permission)) {
 
             Log.d(TAG, "已经获得权限，可以开始使用定位了");
-                //启动定位
+            //启动定位
             mLocationClient.startLocation();
         } else {
-                //无权限则申请权限  权限
+            //无权限则申请权限  权限
             EasyPermissions.requestPermissions(this, "需要权限", REQUEST_PERMISSIONS);
         }
 
@@ -283,7 +309,10 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (mListener != null && aMapLocation != null) {
             if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-                    //获取定位地址
+
+                mListener.onLocationChanged(aMapLocation);
+                // 停止定位后，本地服务不会被销毁
+                //获取定位地址
                 StringBuffer stringBuffer = new StringBuffer();
                 stringBuffer.append("位置：" + aMapLocation.getAddress() + "\n"
                         + "经度：" + String.valueOf(aMapLocation.getLatitude()) + "\n"
@@ -309,9 +338,6 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
                 //显示比例尺控件
 
                 //显示系统蓝点
-                mListener.onLocationChanged(aMapLocation);
-                // 停止定位后，本地服务不会被销毁
-
 
             } else {
 //            定位失败时可以通过ErrCode错误码）信息来确定失败的原因，ErrInfo是错误信息，详情见错误表
@@ -324,6 +350,16 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         }
     }
 
+
+/*    @Override
+    private void initView(){
+//检索参数为城市和天气类型，实况天气为WEATHER_TYPE_LIVE、天气预报为WEATHER_TYPE_FORECAST
+        mquery = new WeatherSearchQuery("北京", WeatherSearchQuery.WEATHER_TYPE_LIVE);
+        mweathersearch=new WeatherSearch(this);
+        mweathersearch.setOnWeatherSearchListener(this);
+        mweathersearch.setQuery(mquery);
+        mweathersearch.searchWeatherAsyn(); //异步搜索
+    }*/
 
     /**
      * 请求权限结果     重写请求判断方法
@@ -349,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
 
     @Override
     public void onPoiSearched(PoiResult poiResult, int i) {
-        
+
     }
 
     @Override

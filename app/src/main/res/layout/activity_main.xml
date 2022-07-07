@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <!--<TextView
@@ -13,16 +12,40 @@
         android:id="@+id/position_text_view"
         android:textColor="@color/black"
         android:textSize="10dp"/>-->
+<!--    地图-->
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    app:titleTextColor="@color/teal_200"
+
+
+    >
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:imeOptions="actionSearch"
+        android:hint="请输入搜索内容"
+        android:paddingLeft="15dp"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:textSize="12sp" />
+</androidx.appcompat.widget.Toolbar>
+
     <com.amap.api.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.amap.api.maps.MapView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/Float_search"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:pressedTranslationZ="18dp"
-    />
-<!--    app:pressedTranslationZ="18dp"//点击按钮时，按钮边缘阴影的宽度-->
-</LinearLayout>
+        android:layout_below="@id/toolbar"/>
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/Float_search"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:pressedTranslationZ="18dp"-->
+<!--        app:layout_anchorGravity="bottom"-->
+<!--        />-->
+    <!--    app:pressedTranslationZ="18dp"//点击按钮时，按钮边缘阴影的宽度-->
+
+</RelativeLayout>

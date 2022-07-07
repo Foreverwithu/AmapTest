@@ -53,7 +53,7 @@ dependencies {
     //3D地图so及jar
     implementation 'com.amap.api:3dmap:latest.integration'
     //定位功能
-    implementation 'com.amap.api:location:latest.integration'
+/*    implementation 'com.amap.api:location:latest.integration'*/
     //搜索功能
     implementation 'com.amap.api:search:latest.integration'
     //Google推荐的EasyPermission库  权限变得动态化：每次动态向用户申请权限  可以帮助简化流程。使得代码变得更加具有逻辑性
