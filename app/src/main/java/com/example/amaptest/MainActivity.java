@@ -27,6 +27,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -121,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         myLocationStyle.strokeWidth(10);
         // 设置圆形的填充颜色  都为0则透明
         myLocationStyle.radiusFillColor(Color.argb(50, 0, 100, 100));
-
+UiSettings uiSettings = aMap.getUiSettings();
+uiSettings.setLogoBottomMargin(-50);
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
 
 //        setPointToCenter(int x, int y);//x、y均为屏幕坐标，屏幕左上角为坐标原点，即(0,0)点。
@@ -175,26 +177,25 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     */
 /**
      * 实时天气查询回调
-     *//*
+     */
 
-    @Override
+
     public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult, int rCode) {
         if (rCode == 1000) {
             if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
                 LocalWeatherLive weatherlive = weatherLiveResult.getLiveResult();
-                reporttime1.setText(weatherlive.getReportTime() + "发布");
-                weather.setText(weatherlive.getWeather());
-                Temperature.setText(weatherlive.getTemperature() + "°");
-                wind.setText(weatherlive.getWindDirection() + "风     " + weatherlive.getWindPower() + "级");
-                humidity.setText("湿度         " + weatherlive.getHumidity() + "%");
+//                reporttime1.setText(weatherlive.getReportTime() + "发布");
+//                weather.setText(weatherlive.getWeather());
+//                Temperature.setText(weatherlive.getTemperature() + "°");
+//                wind.setText(weatherlive.getWindDirection() + "风     " + weatherlive.getWindPower() + "级");
+//                humidity.setText("湿度         " + weatherlive.getHumidity() + "%");
             } else {
-                ToastUtil.show(WeatherSearchActivity.this, R.string.no_result);
+//                ToastUtil.show(WeatherSearchActivity.this, R.string.no_result);
             }
         } else {
-            ToastUtil.showerror(WeatherSearchActivity.this, rCode);
+//            ToastUtil.showerror(WeatherSearchActivity.this, rCode);
         }
     }
-*/
 
     /**
      * 地图生存周期管理
@@ -353,15 +354,15 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     }
 
 
-/*    @Override
-    private void initView(){
+
+    private void initView() throws AMapException {
 //检索参数为城市和天气类型，实况天气为WEATHER_TYPE_LIVE、天气预报为WEATHER_TYPE_FORECAST
         mquery = new WeatherSearchQuery("北京", WeatherSearchQuery.WEATHER_TYPE_LIVE);
         mweathersearch=new WeatherSearch(this);
-        mweathersearch.setOnWeatherSearchListener(this);
+        mweathersearch.setOnWeatherSearchListener((WeatherSearch.OnWeatherSearchListener) this);
         mweathersearch.setQuery(mquery);
         mweathersearch.searchWeatherAsyn(); //异步搜索
-    }*/
+    }
 
     /**
      * 请求权限结果     重写请求判断方法
