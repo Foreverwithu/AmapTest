@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
 
     private WeatherSearchQuery mquery;
     private WeatherSearch mweathersearch;
+    private String city;
 //keyWord表示搜索字符串，
 //第二个参数表示POI搜索类型，二者选填其一，选用POI搜索类型时建议填写类型代码，码表可以参考下方（而非文字）
 //cityCode表示POI搜索区域，可以是城市编码也可以是城市名称，也可以传空字符串，空字符串代表全国在全国范围内进行搜索
@@ -312,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
 
                 mListener.onLocationChanged(aMapLocation);
                 // 停止定位后，本地服务不会被销毁
+                city = aMapLocation.getCity();
                 //获取定位地址
                 StringBuffer stringBuffer = new StringBuffer();
                 stringBuffer.append("位置：" + aMapLocation.getAddress() + "\n"
